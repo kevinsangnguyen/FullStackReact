@@ -6,10 +6,12 @@ const keys = require('../config/keys');
 const User = mongoose.model('users'); //fetch model class
 
 passport.serializeUser((user, done) => {
+  console.log('serializing');
   done(null, user.id); // error, identification
 });
 
 passport.deserializeUser((id, done) => {
+  console.log('deserializing');
   User.findById(id)
     .then(user => {
       done(null, user);
@@ -28,9 +30,11 @@ passport.use(
         .then((existingUser) => {
           if(existingUser) {
             //we already have a record with given profile id
+            console.log('existing user');
             done(null, existingUser); // user passed to serializeUser
           } else {
             // no user record, make a new one
+            console.log('new user');
             new User({ googleId: profile.id }).save().then(user => done(null,user)); // one record async
           }
         });
